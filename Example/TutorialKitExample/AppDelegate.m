@@ -16,7 +16,7 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
-    self.window.rootViewController = [[ExampleViewController alloc] init];
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[[ExampleViewController alloc] init]];
     
     NSValue *msgPoint = [NSValue valueWithCGPoint:
                          CGPointMake(0.5,0.7)];

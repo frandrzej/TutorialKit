@@ -44,6 +44,10 @@
     [btn addTarget:self action:@selector(nextStep:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     self.nextButton = btn;
+    
+    self.navigationItem.title = @"Behind me";
+    [TutorialKit setDefaultTintColor:[UIColor colorWithWhite:1 alpha:0.8]];
+    [TutorialKit setDefaultBlurAmount:1];
 }
 
 - (void)viewWillLayoutSubviews
@@ -66,16 +70,16 @@
 {
     // TutorialKit remembers the current step in NSUserDefaults, but we want to
     // reset the current step every time we press this button
-    [TutorialKit setCurrentStep:0 forTutorial:@"example"];
     
-    [TutorialKit advanceTutorialSequenceWithName:@"example"];
+    [TutorialKit setCurrentStep:0 forTutorial:@"example"];
+    [TutorialKit advanceTutorialSequenceWithName:@"example" andContinue:YES addViewTo:self.view];
 }
 
 - (void)nextStep:(id)sender
 {
     // Auto continue to the next step when the current step is over
     // The default is to not to continue automatically.
-    [TutorialKit advanceTutorialSequenceWithName:@"example" andContinue:YES];
+    [TutorialKit advanceTutorialSequenceWithName:@"example" andContinue:YES addViewTo:self.view];
 }
 
 - (UIImage *)repeatingBackground

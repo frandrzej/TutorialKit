@@ -79,7 +79,7 @@ static NSString* const TKCompleteCallback = @"TKCompleteCallback";
  @param name The name of the tutorial sequence to advance
  @return Returns TRUE if the tutorial sequence advanced
  */
-+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name;
+//+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name;
 
 /** Advance the tutorial sequence is possible
  
@@ -87,8 +87,22 @@ static NSString* const TKCompleteCallback = @"TKCompleteCallback";
  @param continue True if should continue to next tutorial step if possible
  @return Returns TRUE if the tutorial sequence advanced
  */
+//+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name
+//                            andContinue:(BOOL)shouldContinue;
+
+
+/**
+ *  Advance the tutorial sequence is possible, place tutorial view above subview
+ *
+ *  @param name           The name of the tutorial sequence to advance
+ *  @param shouldContinue True if should continue to next tutorial step if possible
+ *  @param parentView Parent view to add overlay view to. If nil, window's top view will be used
+ *
+ *  @return Returns TRUE if the tutorial sequence advanced
+ */
 + (BOOL)advanceTutorialSequenceWithName:(NSString *)name
-                            andContinue:(BOOL)shouldContinue;
+                            andContinue:(BOOL)shouldContinue
+                              addViewTo:(UIView *)parentView;
 
 /** Advance the tutorial sequence is possible and only if on this step and does
  not auto-continue.
@@ -97,8 +111,8 @@ static NSString* const TKCompleteCallback = @"TKCompleteCallback";
  @param step Only advance if the tutorial is on this step
  @return Returns TRUE if the tutorial sequence advanced
  */
-+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name
-                               ifOnStep:(NSInteger)step;
+//+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name
+//                               ifOnStep:(NSInteger)step;
 
 /** Advance the tutorial sequence is possible and only if on this step and
  continue if requested.
@@ -106,11 +120,13 @@ static NSString* const TKCompleteCallback = @"TKCompleteCallback";
  @param name The name of the tutorial sequence to advance
  @param step Only advance if the tutorial is on this step
  @param shouldContinue True if should continue to next tutorial step if possible
+ @param parentView Parent view to add overlay view to. If nil, window's top view will be used
  @return Returns TRUE if the tutorial sequence advanced
  */
 + (BOOL)advanceTutorialSequenceWithName:(NSString *)name
                                ifOnStep:(NSInteger)step
-                            andContinue:(BOOL)shouldContinue;
+                            andContinue:(BOOL)shouldContinue
+                              addViewTo:(UIView *)parentView;
 
 /** Current step for the specified tutorial
  

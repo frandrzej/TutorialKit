@@ -53,13 +53,18 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name
-{
-    return [TutorialKit advanceTutorialSequenceWithName:name andContinue:NO];
-}
+//+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name
+//{
+//    return [TutorialKit advanceTutorialSequenceWithName:name andContinue:NO];
+//}
+//
+//////////////////////////////////////////////////////////////////////////////////
+//+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name andContinue:(BOOL)shouldContinue
+//{
+//    return [TutorialKit advanceTutorialSequenceWithName:name andContinue:shouldContinue addViewTo:nil];
+//}
 
-////////////////////////////////////////////////////////////////////////////////
-+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name andContinue:(BOOL)shouldContinue
++ (BOOL)advanceTutorialSequenceWithName:(NSString *)name andContinue:(BOOL)shouldContinue addViewTo:(UIView *)parentView
 {
     if(TutorialKit.sharedInstance.currentTutorialView) {
         // a tutorial view is already visible
@@ -102,7 +107,7 @@
         // ensure this is a mutable copy
         current = current.mutableCopy;
     }
-
+    
     if(![current objectForKey:TKMessageFont]) {
         [current setObject:TutorialKit.sharedInstance.labelFont forKey:TKMessageFont];
     }
@@ -126,7 +131,7 @@
             return NO;
         }
     }
-
+    
     TutorialKitView *tkv = [TutorialKitView tutorialViewWithDictionary:current];
     if(tkv) {
         tkv.sequenceStep = step.integerValue;
@@ -138,30 +143,32 @@
         [tkv addGestureRecognizer:tapRecognizer];
         TutorialKit.sharedInstance.currentTutorialView = tkv;
         TutorialKit.sharedInstance.shouldContinue = shouldContinue;
-        [TutorialKit presentTutorialView:tkv withAnimation:YES];
+        [TutorialKit presentTutorialView:tkv withAnimation:YES addViewTo:parentView];
     }
     
     return tkv != NULL;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
-+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name ifOnStep:(NSInteger)step
-{
-    return [TutorialKit advanceTutorialSequenceWithName:name
-                                               ifOnStep:step
-                                            andContinue:NO];
-}
+//+ (BOOL)advanceTutorialSequenceWithName:(NSString *)name ifOnStep:(NSInteger)step
+//{
+//    return [TutorialKit advanceTutorialSequenceWithName:name
+//                                               ifOnStep:step
+//                                            andContinue:NO];
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 + (BOOL)advanceTutorialSequenceWithName:(NSString *)name
                                ifOnStep:(NSInteger)step
                             andContinue:(BOOL)shouldContinue
+                              addViewTo:(UIView *)parentView
 {
     if([TutorialKit currentStepForTutorialWithName:name] != step) {
         return NO;
     }
     
-    return [TutorialKit advanceTutorialSequenceWithName:name andContinue:shouldContinue];
+    return [TutorialKit advanceTutorialSequenceWithName:name andContinue:shouldContinue addViewTo:parentView];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -238,13 +245,25 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-+ (void)presentTutorialView:(TutorialKitView *)view withAnimation:(BOOL)animate
+//+ (void)presentTutorialView:(TutorialKitView *)view withAnimation:(BOOL)animate
+//{
+//    [TutorialKit presentTutorialView:view withAnimation:animate addViewTo:nil];
+//}
+
++ (void)presentTutorialView:(TutorialKitView *)view withAnimation:(BOOL)animate addViewTo:(UIView *)parentView
 {
     NSArray *windows = [UIApplication sharedApplication].windows;
     if(windows && windows.count > 0) {
-        UIWindow *window = [windows objectAtIndex:0];
-        [window addSubview:view];
-        view.frame = window.bounds;
+        
+        if(parentView) {
+            [parentView addSubview:view];
+            view.frame = parentView.bounds;
+        } else {
+            UIWindow *window = [windows objectAtIndex:0];
+            [window addSubview:view];
+            view.frame = window.bounds;
+        }
+        
         [view setNeedsLayout];
         
         if(animate) {
@@ -259,6 +278,7 @@
         }
     }
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 + (void)setCurrentStep:(NSInteger)step forTutorial:(NSString *)name
@@ -281,7 +301,7 @@
         }
         [steps setObject:@(step) forKey:name];
         [NSUserDefaults.standardUserDefaults setObject:steps forKey:TKUserDefaultsKey];
-
+        
         [TutorialKit.sharedInstance.sequences setObject:sequence forKey:name];
     }
 }
@@ -368,7 +388,7 @@
         view.alpha = 0;
     } completion:^(BOOL finished) {
         if(TutorialKit.sharedInstance.shouldContinue) {
-            [TutorialKit advanceTutorialSequenceWithName:view.sequenceName];
+            [TutorialKit advanceTutorialSequenceWithName:view.sequenceName andContinue:NO addViewTo:view.superview];
         }
         else {
             [view removeFromSuperview];
